@@ -53,7 +53,7 @@ void shuffle_board(game_state *gs)
     srand((unsigned)time(&t));
     for (int i = 0; i < SHUFFLE_COUNT;)
     {
-        int d = rand() % BOARD_SIZE;
+        int d = rand() % 4;
         switch (d)
         {
         case 0:
