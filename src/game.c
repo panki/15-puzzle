@@ -3,7 +3,7 @@
 #include <stdbool.h>
 #include "game.h"
 
-bool move_up(game_state *gs)
+bool move_up(Game *gs)
 {
     if (gs->row == 0)
         return false;
@@ -14,40 +14,40 @@ bool move_up(game_state *gs)
     return true;
 }
 
-bool move_down(game_state *gs)
+bool move_down(Game *g)
 {
-    if (gs->row == MAXRC)
+    if (g->row == MAXRC)
         return false;
-    gs->board[gs->row][gs->col] = gs->board[gs->row + 1][gs->col];
-    gs->board[gs->row + 1][gs->col] = 0;
-    gs->moves++;
-    gs->row++;
+    g->board[g->row][g->col] = g->board[g->row + 1][g->col];
+    g->board[g->row + 1][g->col] = 0;
+    g->moves++;
+    g->row++;
     return true;
 }
 
-bool move_left(game_state *gs)
+bool move_left(Game *g)
 {
-    if (gs->col == 0)
+    if (g->col == 0)
         return false;
-    gs->board[gs->row][gs->col] = gs->board[gs->row][gs->col - 1];
-    gs->board[gs->row][gs->col - 1] = 0;
-    gs->moves++;
-    gs->col--;
+    g->board[g->row][g->col] = g->board[g->row][g->col - 1];
+    g->board[g->row][g->col - 1] = 0;
+    g->moves++;
+    g->col--;
     return true;
 }
 
-bool move_right(game_state *gs)
+bool move_right(Game *g)
 {
-    if (gs->col == MAXRC)
+    if (g->col == MAXRC)
         return false;
-    gs->board[gs->row][gs->col] = gs->board[gs->row][gs->col + 1];
-    gs->board[gs->row][gs->col + 1] = 0;
-    gs->moves++;
-    gs->col++;
+    g->board[g->row][g->col] = g->board[g->row][g->col + 1];
+    g->board[g->row][g->col + 1] = 0;
+    g->moves++;
+    g->col++;
     return true;
 }
 
-void shuffle_board(game_state *gs)
+void shuffle_board(Game *g)
 {
     time_t t;
     srand((unsigned)time(&t));
@@ -57,47 +57,47 @@ void shuffle_board(game_state *gs)
         switch (d)
         {
         case 0:
-            move_left(gs) && i++;
+            move_left(g) && i++;
             break;
         case 1:
-            move_up(gs) && i++;
+            move_up(g) && i++;
             break;
         case 2:
-            move_right(gs) && i++;
+            move_right(g) && i++;
             break;
         case 3:
-            move_down(gs) && i++;
+            move_down(g) && i++;
             break;
         }
     }
-    gs->moves = 0; // clear after shuffle
+    g->moves = 0; // clear after shuffle
 }
 
-game_state new_game()
+Game new_game()
 {
-    game_state gs;
+    Game g;
     for (char i = 0; i < BOARD_CELLS; i++)
     {
         char row = ROW(i), col = COL(i);
-        gs.board[row][col] = i + 1;
+        g.board[row][col] = i + 1;
     }
 
-    gs.row = gs.col = MAXRC;
-    gs.board[gs.row][gs.col] = 0;
+    g.row = g.col = MAXRC;
+    g.board[g.row][g.col] = 0;
 
-    shuffle_board(&gs);
-    return gs;
+    shuffle_board(&g);
+    return g;
 }
 
-bool check_win(game_state *gs)
+bool check_win(Game *g)
 {
-    if (gs->col != MAXRC && gs->row != MAXRC)
+    if (g->col != MAXRC && g->row != MAXRC)
         return false;
 
     for (char i = 0; i < BOARD_CELLS - 1; i++)
     {
         char row = ROW(i), col = COL(i);
-        if (gs->board[row][col] != i + 1)
+        if (g->board[row][col] != i + 1)
             return false;
     }
     return true;

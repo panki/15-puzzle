@@ -77,9 +77,9 @@ MENU_ITEM main_menu(MENU_ITEM default_item)
     }
 }
 
-screen_state new_game_screen()
+Screen new_game_screen()
 {
-    screen_state ss;
+    Screen s;
 
     char cw = 6; // ширина клетки
     char ch = 3; // высота клетки
@@ -93,7 +93,7 @@ screen_state new_game_screen()
     char framew = cw * BOARD_SIZE + cw_space * (BOARD_SIZE + 1) + 2; // ширина рамки
     char frameh = ch * BOARD_SIZE + ch_space * (BOARD_SIZE + 1) + 2; // высота рамки
 
-    ss.frame = create_window(framew, frameh, "Игра");
+    s.frame = create_window(framew, frameh, "Игра");
 
     // Создаем дочерние окна для каждой клетки
     for (char i = 0; i < BOARD_CELLS; i++)
@@ -101,22 +101,22 @@ screen_state new_game_screen()
         char row = ROW(i), col = COL(i);
         char x = cx + col * (cw + cw_space);
         char y = cy + row * (ch + ch_space);
-        ss.board[row][col] = derwin(ss.frame, ch, cw, y, x);
+        s.board[row][col] = derwin(s.frame, ch, cw, y, x);
     }
-    return ss;
+    return s;
 }
 
-void update_game_screen(screen_state *ss, game_state *gs)
+void update_game_screen(Screen *s, Game *g)
 {
     for (char i = 0; i < BOARD_CELLS; i++)
     {
         char row = ROW(i), col = COL(i);
-        WINDOW *w = ss->board[row][col];
+        WINDOW *w = s->board[row][col];
 
-        if (gs->board[row][col] > 0)
+        if (g->board[row][col] > 0)
         {
             box(w, 0, 0);
-            mvwprintw(w, 1, 2, "%2d", gs->board[row][col]);
+            mvwprintw(w, 1, 2, "%2d", g->board[row][col]);
         }
         else
         {
@@ -124,18 +124,18 @@ void update_game_screen(screen_state *ss, game_state *gs)
         }
         wrefresh(w);
     }
-    mvwprintw(ss->frame, getmaxy(ss->frame) - 1, (getmaxx(ss->frame) - 16) / 2, " номер хода: %d ", gs->moves);
+    mvwprintw(s->frame, getmaxy(s->frame) - 1, (getmaxx(s->frame) - 16) / 2, " номер хода: %d ", g->moves);
 }
 
-void clear_game_screen(screen_state *ss)
+void clear_game_screen(Screen *s)
 {
     for (char i = 0; i < BOARD_CELLS; i++)
     {
         char row = ROW(i), col = COL(i);
-        WINDOW *w = ss->board[row][col];
+        WINDOW *w = s->board[row][col];
         close_window(w);
     }
-    close_window(ss->frame);
+    close_window(s->frame);
 }
 
 void help()
@@ -170,30 +170,30 @@ void win()
 void play()
 {
     bool play = true;
-    game_state gs = new_game();
-    screen_state ss = new_game_screen();
+    Game game = new_game();
+    Screen screen = new_game_screen();
 
     do
     {
-        update_game_screen(&ss, &gs);
-        int key = wgetch(ss.frame);
+        update_game_screen(&screen, &game);
+        int key = wgetch(screen.frame);
         switch (key)
         {
         case KEY_RIGHT:
-            move_left(&gs);
+            move_left(&game);
             break;
         case KEY_DOWN:
-            move_up(&gs);
+            move_up(&game);
             break;
         case KEY_LEFT:
-            move_right(&gs);
+            move_right(&game);
             break;
         case KEY_UP:
-            move_down(&gs);
+            move_down(&game);
             break;
         case 'n':
         case 'N':
-            gs = new_game();
+            game = new_game();
             break;
         case 'q':
         case 'Q':
@@ -202,14 +202,14 @@ void play()
         default:
             continue;
         }
-        if (check_win(&gs))
+        if (check_win(&game))
         {
-            update_game_screen(&ss, &gs);
+            update_game_screen(&screen, &game);
             win();
             play = false;
             break;
         }
     } while (play);
 
-    clear_game_screen(&ss);
+    clear_game_screen(&screen);
 }

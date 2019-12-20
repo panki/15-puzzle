@@ -11,19 +11,19 @@
 
 #define SHUFFLE_COUNT 4
 
-typedef struct game_state
+typedef struct Game
 {
     char board[BOARD_SIZE][BOARD_SIZE];
     char row;
     char col;
     unsigned int moves;
-} game_state;
+} Game;
 
-game_state new_game();
-bool check_win(game_state *);
-bool move_up(game_state *);
-bool move_down(game_state *);
-bool move_left(game_state *);
-bool move_right(game_state *);
+Game new_game();
+bool check_win(Game *);
+bool move_up(Game *);
+bool move_down(Game *);
+bool move_left(Game *);
+bool move_right(Game *);
 
 #endif

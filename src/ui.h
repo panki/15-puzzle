@@ -4,11 +4,11 @@
 #include <ncurses.h>
 #include "game.h"
 
-typedef struct screen_state
+typedef struct Screen
 {
     WINDOW *frame;
     WINDOW *board[BOARD_SIZE][BOARD_SIZE];
-} screen_state;
+} Screen;
 
 typedef enum MENU_ITEM
 {
