@@ -2,7 +2,7 @@
 #define UI_HEADER
 
 #include <ncurses.h>
-#include "types.h"
+#include "game.h"
 
 typedef struct screen_state
 {
@@ -22,9 +22,7 @@ typedef enum MENU_ITEM
 void init_screen();
 void help();
 void win();
+void play();
 MENU_ITEM main_menu(MENU_ITEM);
-screen_state new_game_screen();
-void update_game_screen(screen_state *, game_state *);
-void clear_game_screen(screen_state *);
 
 #endif

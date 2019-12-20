@@ -1,5 +1,6 @@
-#include "ui.h"
 #include <locale.h>
+#include "game.h"
+#include "ui.h"
 
 void init_screen()
 {
@@ -184,4 +185,51 @@ void win()
     wclear(frame);   // Очищаем окно с рамкой
     wrefresh(frame); // Обновляем экран
     delwin(frame);   // Удаляем окно
+}
+
+void play()
+{
+    bool play = true;
+    game_state gs = new_game();
+    screen_state ss = new_game_screen();
+
+    do
+    {
+        update_game_screen(&ss, &gs);
+        int key = wgetch(ss.frame);
+        switch (key)
+        {
+        case KEY_RIGHT:
+            move_left(&gs);
+            break;
+        case KEY_DOWN:
+            move_up(&gs);
+            break;
+        case KEY_LEFT:
+            move_right(&gs);
+            break;
+        case KEY_UP:
+            move_down(&gs);
+            break;
+        case 'n':
+        case 'N':
+            gs = new_game();
+            break;
+        case 'q':
+        case 'Q':
+            play = false;
+            continue;
+        default:
+            continue;
+        }
+        if (check_win(&gs))
+        {
+            update_game_screen(&ss, &gs);
+            win();
+            play = false;
+            break;
+        }
+    } while (play);
+
+    clear_game_screen(&ss);
 }
