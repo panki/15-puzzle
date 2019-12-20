@@ -84,10 +84,9 @@ screen_state new_game_screen()
     keypad(ss.frame, TRUE);                    // Разрешаем ввод с клавиатуры
 
     // Создаем дочерние окна для каждой клетки
-    for (byte i = 0; i < BOARD_SIZE * BOARD_SIZE; i++)
+    for (byte i = 0; i < BOARD_CELLS; i++)
     {
-        byte row = i / BOARD_SIZE;
-        byte col = i % BOARD_SIZE;
+        byte row = ROW(i), col = COL(i);
         byte x = cx + col * (cw + cw_space);
         byte y = cy + row * (ch + ch_space);
         ss.board[row][col] = derwin(ss.frame, ch, cw, y, x);
@@ -99,10 +98,9 @@ void update_game_screen(screen_state *ss, game_state *gs)
 {
     box(ss->frame, 0, 0);
 
-    for (byte i = 0; i < BOARD_SIZE * BOARD_SIZE; i++)
+    for (byte i = 0; i < BOARD_CELLS; i++)
     {
-        byte row = i / BOARD_SIZE;
-        byte col = i % BOARD_SIZE;
+        byte row = ROW(i), col = COL(i);
 
         WINDOW *win = ss->board[row][col];
 
@@ -122,10 +120,9 @@ void update_game_screen(screen_state *ss, game_state *gs)
 
 void clear_game_screen(screen_state *ss)
 {
-    for (byte i = 0; i < BOARD_SIZE * BOARD_SIZE; i++)
+    for (byte i = 0; i < BOARD_CELLS; i++)
     {
-        byte row = i / BOARD_SIZE;
-        byte col = i % BOARD_SIZE;
+        byte row = ROW(i), col = COL(i);
         WINDOW *win = ss->board[row][col];
         delwin(win);
     }

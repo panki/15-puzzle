@@ -16,7 +16,7 @@ bool move_up(game_state *gs)
 
 bool move_down(game_state *gs)
 {
-    if (gs->row == BOARD_SIZE - 1)
+    if (gs->row == MAXRC)
         return false;
     gs->board[gs->row][gs->col] = gs->board[gs->row + 1][gs->col];
     gs->board[gs->row + 1][gs->col] = 0;
@@ -38,7 +38,7 @@ bool move_left(game_state *gs)
 
 bool move_right(game_state *gs)
 {
-    if (gs->col == BOARD_SIZE - 1)
+    if (gs->col == MAXRC)
         return false;
     gs->board[gs->row][gs->col] = gs->board[gs->row][gs->col + 1];
     gs->board[gs->row][gs->col + 1] = 0;
@@ -70,41 +70,35 @@ void shuffle_board(game_state *gs)
             break;
         }
     }
+    gs->moves = 0; // clear after shuffle
 }
 
 game_state new_game()
 {
     game_state gs;
-    for (byte row = 0; row < BOARD_SIZE; row++)
+    for (byte i = 0; i < BOARD_CELLS; i++)
     {
-        for (byte col = 0; col < BOARD_SIZE; col++)
-        {
-            gs.board[row][col] = row * BOARD_SIZE + col + 1;
-        }
+        byte row = ROW(i), col = COL(i);
+        gs.board[row][col] = i + 1;
     }
-    gs.board[BOARD_SIZE - 1][BOARD_SIZE - 1] = 0;
-    gs.row = BOARD_SIZE - 1;
-    gs.col = BOARD_SIZE - 1;
+
+    gs.row = gs.col = MAXRC;
+    gs.board[gs.row][gs.col] = 0;
+
     shuffle_board(&gs);
-    gs.moves = 0;
     return gs;
 }
 
 bool check_win(game_state *gs)
 {
-    if (gs->col != BOARD_SIZE - 1 && gs->row != BOARD_SIZE - 1)
-    {
+    if (gs->col != MAXRC && gs->row != MAXRC)
         return false;
-    }
-    int row, col;
-    for (int i = 0; i < BOARD_SIZE * BOARD_SIZE - 1; i++)
+
+    for (int i = 0; i < BOARD_CELLS - 1; i++)
     {
-        row = i / BOARD_SIZE;
-        col = i % BOARD_SIZE;
+        byte row = ROW(i), col = COL(i);
         if (gs->board[row][col] != i + 1)
-        {
             return false;
-        }
     }
     return true;
 }
