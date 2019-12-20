@@ -3,8 +3,6 @@
 
 #include <stdbool.h>
 
-typedef char byte;
-
 #define BOARD_SIZE 4
 #define BOARD_CELLS BOARD_SIZE *BOARD_SIZE
 #define MAXRC BOARD_SIZE - 1
@@ -15,9 +13,9 @@ typedef char byte;
 
 typedef struct game_state
 {
-    byte board[BOARD_SIZE][BOARD_SIZE];
-    byte row;
-    byte col;
+    char board[BOARD_SIZE][BOARD_SIZE];
+    char row;
+    char col;
     unsigned int moves;
 } game_state;
 

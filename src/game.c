@@ -76,9 +76,9 @@ void shuffle_board(game_state *gs)
 game_state new_game()
 {
     game_state gs;
-    for (byte i = 0; i < BOARD_CELLS; i++)
+    for (char i = 0; i < BOARD_CELLS; i++)
     {
-        byte row = ROW(i), col = COL(i);
+        char row = ROW(i), col = COL(i);
         gs.board[row][col] = i + 1;
     }
 
@@ -94,9 +94,9 @@ bool check_win(game_state *gs)
     if (gs->col != MAXRC && gs->row != MAXRC)
         return false;
 
-    for (int i = 0; i < BOARD_CELLS - 1; i++)
+    for (char i = 0; i < BOARD_CELLS - 1; i++)
     {
-        byte row = ROW(i), col = COL(i);
+        char row = ROW(i), col = COL(i);
         if (gs->board[row][col] != i + 1)
             return false;
     }

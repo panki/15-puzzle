@@ -17,17 +17,17 @@ MENU_ITEM main_menu(MENU_ITEM default_item)
 {
     WINDOW *w;
 
-    int current_item = default_item >= 0 && default_item < MENU_ITEMS_COUNT ? default_item : 0;
+    char current_item = default_item >= 0 && default_item < MENU_ITEMS_COUNT ? default_item : 0;
 
     char *menu_items[MENU_ITEMS_COUNT];
     menu_items[ITEM_PLAY] = "Новая игра";
     menu_items[ITEM_HELP] = "Помощь    ";
     menu_items[ITEM_EXIT] = "Выход     ";
 
-    int width = 20;                               // Ширина окна
-    int height = 7;                               // Высота окна
-    int x = (getmaxx(stdscr) - width) / 2;        // По центру
-    int y = (getmaxy(stdscr) - height) / 2;       // По центру
+    char width = 20;                              // Ширина окна
+    char height = 7;                              // Высота окна
+    char x = (getmaxx(stdscr) - width) / 2;       // По центру
+    char y = (getmaxy(stdscr) - height) / 2;      // По центру
     w = newwin(height, width, y, x);              // Новое окно
     box(w, 0, 0);                                 // Рамка
     mvwprintw(w, 0, (width - 8) / 2, "┤ Меню ├"); // Заголовок
@@ -37,7 +37,7 @@ MENU_ITEM main_menu(MENU_ITEM default_item)
     while (true)
     {
         // печатаем иеню и текущий выбранный пункт меню
-        for (int i = 0; i < MENU_ITEMS_COUNT; i++)
+        for (char i = 0; i < MENU_ITEMS_COUNT; i++)
         {
             i == current_item ? wattron(w, A_STANDOUT) : wattroff(w, A_STANDOUT);
             mvwprintw(w, i + 2, 4, " %s ", menu_items[i]);
@@ -65,31 +65,31 @@ screen_state new_game_screen()
 {
     screen_state ss;
 
-    byte cw = 6; // ширина клетки
-    byte ch = 3; // высота клетки
+    char cw = 6; // ширина клетки
+    char ch = 3; // высота клетки
 
-    byte ch_space = 0; // расстояние между клетками по вертикали
-    byte cw_space = 1; // расстояние между клетками по горищонтали
+    char ch_space = 0; // расстояние между клетками по вертикали
+    char cw_space = 1; // расстояние между клетками по горищонтали
 
-    byte framew = cw * BOARD_SIZE + cw_space * (BOARD_SIZE + 1) + 2; // ширина рамки
-    byte frameh = ch * BOARD_SIZE + ch_space * (BOARD_SIZE + 1) + 2; // высота рамки
+    char framew = cw * BOARD_SIZE + cw_space * (BOARD_SIZE + 1) + 2; // ширина рамки
+    char frameh = ch * BOARD_SIZE + ch_space * (BOARD_SIZE + 1) + 2; // высота рамки
 
-    byte fx = (getmaxx(stdscr) - framew) / 2; // по центру
-    byte fy = (getmaxy(stdscr) - frameh) / 2; // по центру
+    char fx = (getmaxx(stdscr) - framew) / 2; // по центру
+    char fy = (getmaxy(stdscr) - frameh) / 2; // по центру
 
-    byte cx = 2; // отступ до клеток по горищонтали
-    byte cy = 1; // отступ до клеток по вертикали
+    char cx = 2; // отступ до клеток по горищонтали
+    char cy = 1; // отступ до клеток по вертикали
 
     ss.frame = newwin(frameh, framew, fy, fx); // Окно с рамкой
     box(ss.frame, 0, 0);                       // Рамка
     keypad(ss.frame, TRUE);                    // Разрешаем ввод с клавиатуры
 
     // Создаем дочерние окна для каждой клетки
-    for (byte i = 0; i < BOARD_CELLS; i++)
+    for (char i = 0; i < BOARD_CELLS; i++)
     {
-        byte row = ROW(i), col = COL(i);
-        byte x = cx + col * (cw + cw_space);
-        byte y = cy + row * (ch + ch_space);
+        char row = ROW(i), col = COL(i);
+        char x = cx + col * (cw + cw_space);
+        char y = cy + row * (ch + ch_space);
         ss.board[row][col] = derwin(ss.frame, ch, cw, y, x);
     }
     return ss;
@@ -99,9 +99,9 @@ void update_game_screen(screen_state *ss, game_state *gs)
 {
     box(ss->frame, 0, 0);
 
-    for (byte i = 0; i < BOARD_CELLS; i++)
+    for (char i = 0; i < BOARD_CELLS; i++)
     {
-        byte row = ROW(i), col = COL(i);
+        char row = ROW(i), col = COL(i);
 
         WINDOW *win = ss->board[row][col];
 
@@ -121,9 +121,9 @@ void update_game_screen(screen_state *ss, game_state *gs)
 
 void clear_game_screen(screen_state *ss)
 {
-    for (byte i = 0; i < BOARD_CELLS; i++)
+    for (char i = 0; i < BOARD_CELLS; i++)
     {
-        byte row = ROW(i), col = COL(i);
+        char row = ROW(i), col = COL(i);
         WINDOW *win = ss->board[row][col];
         delwin(win);
     }
@@ -136,10 +136,10 @@ void help()
 {
     WINDOW *frame, *w;
 
-    int width = 50;                         // Ширина окна с рамкой
-    int height = 12;                        // Высота окна с рамкой
-    int x = (getmaxx(stdscr) - width) / 2;  // По центру
-    int y = (getmaxy(stdscr) - height) / 2; // По центру
+    char width = 50;                         // Ширина окна с рамкой
+    char height = 12;                        // Высота окна с рамкой
+    char x = (getmaxx(stdscr) - width) / 2;  // По центру
+    char y = (getmaxy(stdscr) - height) / 2; // По центру
 
     frame = newwin(height, width, y, x);                 // Новое окно c рамкой
     box(frame, 0, 0);                                    // Рамка у окна
@@ -168,10 +168,10 @@ void win()
 {
     WINDOW *frame;
 
-    int width = 50;                         // Ширина окна с рамкой
-    int height = 5;                         // Высота окна с рамкой
-    int x = (getmaxx(stdscr) - width) / 2;  // По центру
-    int y = (getmaxy(stdscr) - height) / 2; // По центру
+    char width = 50;                         // Ширина окна с рамкой
+    char height = 5;                         // Высота окна с рамкой
+    char x = (getmaxx(stdscr) - width) / 2;  // По центру
+    char y = (getmaxy(stdscr) - height) / 2; // По центру
 
     frame = newwin(height, width, y, x);                    // Новое окно c рамкой
     box(frame, 0, 0);                                       // Рамка у окна
