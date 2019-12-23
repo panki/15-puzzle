@@ -11,6 +11,19 @@
 
 #define SHUFFLE_COUNT 4
 
+typedef enum DIRECTION
+{
+    // Order is matter to calculate opposite
+    // direction as simple math operation
+    UP = 0,
+    LEFT = 1,
+    RIGHT = 2,
+    DOWN = 3
+} DIRECTION;
+
+#define OPPOSITE_DIRECTION(d) (DOWN - (d))
+#define RANDOM_DIRECTION (rand() % (DOWN + 1))
+
 typedef struct Game
 {
     char board[BOARD_SIZE][BOARD_SIZE];
