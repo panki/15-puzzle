@@ -47,9 +47,6 @@ bool move_to(Game *g, Direction dir)
 
 void shuffle_board(Game *g)
 {
-    time_t t;
-    srand((unsigned)time(&t));
-
     for (int i = 0; i < SHUFFLE_COUNT;)
     {
         int dir = RANDOM_DIRECTION;

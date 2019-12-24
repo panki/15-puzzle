@@ -1,7 +1,10 @@
+#include <time.h>
+#include <stdlib.h>
 #include "ui.h"
 
 void run()
 {
+    srand(time(0));
     while (true)
     {
         MENU_ITEM i = main_menu(i);
