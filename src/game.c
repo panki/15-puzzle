@@ -3,8 +3,31 @@
 #include <stdbool.h>
 #include "game.h"
 
-void move_to(Game *g, char row, char col)
+bool move_to(Game *g, Direction dir)
 {
+    char row = g->row, col = g->col;
+
+    switch (dir)
+    {
+    case UP:
+        row--;
+        break;
+    case DOWN:
+        row++;
+        break;
+    case LEFT:
+        col--;
+        break;
+    case RIGHT:
+        col++;
+        break;
+    default:
+        return false;
+    }
+
+    if (col < 0 || col > MAXRC || row < 0 || row > MAXRC)
+        return false;
+
     char value = g->board[row][col];
     if (value == TARGET_VALUE(row, col))
     {
@@ -17,42 +40,8 @@ void move_to(Game *g, char row, char col)
     g->board[g->row][g->col] = g->board[row][col];
     g->board[row][col] = 0;
     g->moves++;
-}
-
-bool move_up(Game *g)
-{
-    if (g->row == 0)
-        return false;
-    move_to(g, g->row - 1, g->col);
-    g->row--;
-    return true;
-}
-
-bool move_down(Game *g)
-{
-    if (g->row == MAXRC)
-        return false;
-    move_to(g, g->row + 1, g->col);
-    g->row++;
-    return true;
-}
-
-bool move_left(Game *g)
-{
-    if (g->col == 0)
-        return false;
-    move_to(g, g->row, g->col - 1);
-    char value = g->board[g->row][g->col - 1];
-    g->col--;
-    return true;
-}
-
-bool move_right(Game *g)
-{
-    if (g->col == MAXRC)
-        return false;
-    move_to(g, g->row, g->col + 1);
-    g->col++;
+    g->row = row;
+    g->col = col;
     return true;
 }
 
@@ -60,27 +49,14 @@ void shuffle_board(Game *g)
 {
     time_t t;
     srand((unsigned)time(&t));
+
     for (int i = 0; i < SHUFFLE_COUNT;)
     {
-        int d = RANDOM_DIRECTION;
-        switch (d)
-        {
-        case UP:
-            move_up(g) && i++;
-            break;
-        case LEFT:
-            move_left(g) && i++;
-            break;
-        case RIGHT:
-            move_right(g) && i++;
-            break;
-        case DOWN:
-            move_down(g) && i++;
-            break;
-        }
+        int dir = RANDOM_DIRECTION;
+        move_to(g, dir) && i++;
     }
-
-    g->moves = 0; // clear after shuffle
+    // clear after shuffle
+    g->moves = 0;
 }
 
 Game new_game()

@@ -180,16 +180,16 @@ void play()
         switch (key)
         {
         case KEY_RIGHT:
-            move_left(&game);
+            move_to(&game, LEFT);
             break;
         case KEY_DOWN:
-            move_up(&game);
+            move_to(&game, UP);
             break;
         case KEY_LEFT:
-            move_right(&game);
+            move_to(&game, RIGHT);
             break;
         case KEY_UP:
-            move_down(&game);
+            move_to(&game, DOWN);
             break;
         case 'n':
         case 'N':

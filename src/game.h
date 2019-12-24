@@ -12,7 +12,7 @@
 
 #define SHUFFLE_COUNT 4
 
-typedef enum DIRECTION
+typedef enum Direction
 {
     // Order is matter to calculate opposite
     // direction as simple math operation
@@ -20,7 +20,7 @@ typedef enum DIRECTION
     LEFT = 1,
     RIGHT = 2,
     DOWN = 3
-} DIRECTION;
+} Direction;
 
 #define OPPOSITE_DIRECTION(d) (DOWN - (d))
 #define RANDOM_DIRECTION (rand() % (DOWN + 1))
@@ -36,9 +36,6 @@ typedef struct Game
 
 Game new_game();
 bool check_win(Game *);
-bool move_up(Game *);
-bool move_down(Game *);
-bool move_left(Game *);
-bool move_right(Game *);
+bool move_to(Game *, Direction);
 
 #endif
