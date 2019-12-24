@@ -2,6 +2,7 @@
 #include <string.h>
 #include "game.h"
 #include "ui.h"
+#include "solver.h"
 
 int utf8len(char *s)
 {
@@ -143,7 +144,7 @@ void clear_game_screen(Screen *s)
 void help()
 {
     char width = 50;  // Ширина окна с рамкой
-    char height = 12; // Высота окна с рамкой
+    char height = 13; // Высота окна с рамкой
 
     WINDOW *frame = create_window(width, height, "Помощь");
     WINDOW *w = derwin(frame, height - 4, width - 8, 2, 4); // Новое окно с отступами для текста
@@ -151,6 +152,7 @@ void help()
     wprintw(w, "Управление:\n\n");
     wprintw(w, "← ↑ ↓ → - перемещение фишек\n");
     wprintw(w, "      N - начать игру заново\n");
+    wprintw(w, "      S - подсказать следующий ход\n");
     wprintw(w, "      Q - закончить игру и выйти в меню\n");
     wprintw(w, "\n\nНажмите любую клавишу для возврата в меню");
     wrefresh(w);
@@ -172,8 +174,10 @@ void win()
 void play()
 {
     bool play = true;
+
     Game game = new_game();
     Screen screen = new_game_screen();
+    Solution *solution;
 
     do
     {
@@ -197,6 +201,12 @@ void play()
         case 'N':
             game = new_game();
             break;
+        case 's':
+        case 'S':
+            if (!solution)
+                solution = solver_solve(&game);
+            game = solver_suggest(&game, &solution);
+            break;
         case 'q':
         case 'Q':
             play = false;
@@ -204,6 +214,7 @@ void play()
         default:
             continue;
         }
+
         if (check_win(&game))
         {
             update_game_screen(&screen, &game);
@@ -213,5 +224,6 @@ void play()
         }
     } while (play);
 
+    solver_free(&solution);
     clear_game_screen(&screen);
 }
