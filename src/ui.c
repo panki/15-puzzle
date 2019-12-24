@@ -1,4 +1,5 @@
 #include <locale.h>
+#include <string.h>
 #include "game.h"
 #include "ui.h"
 
@@ -113,10 +114,10 @@ void update_game_screen(Screen *s, Game *g)
         char row = ROW(i), col = COL(i);
         WINDOW *w = s->board[row][col];
 
-        if (g->board[row][col] > 0)
+        if (g->board[row][col] != EMPTY_CELL)
         {
             box(w, 0, 0);
-            mvwprintw(w, 1, 2, "%2d", g->board[row][col]);
+            mvwprintw(w, 1, 2, "%2d", g->board[row][col] + 1);
         }
         else
         {
@@ -125,6 +126,7 @@ void update_game_screen(Screen *s, Game *g)
         wrefresh(w);
     }
     mvwprintw(s->frame, getmaxy(s->frame) - 1, (getmaxx(s->frame) - 16) / 2, " номер хода: %d ", g->moves);
+    wrefresh(s->frame);
 }
 
 void clear_game_screen(Screen *s)

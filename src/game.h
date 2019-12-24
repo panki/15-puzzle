@@ -8,7 +8,8 @@
 #define MAXRC (BOARD_SIZE - 1)
 #define ROW(i) (i / BOARD_SIZE)
 #define COL(i) (i % BOARD_SIZE)
-#define TARGET_VALUE(row, col) ((row)*BOARD_SIZE + (col) + 1)
+#define EMPTY_CELL (BOARD_CELLS - 1)
+#define TARGET_VALUE(row, col) ((row)*BOARD_SIZE + (col))
 
 #define SHUFFLE_COUNT 4
 

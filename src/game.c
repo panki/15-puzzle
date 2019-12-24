@@ -38,7 +38,7 @@ bool move_to(Game *g, Direction dir)
         g->correct_cells++;
     }
     g->board[g->row][g->col] = g->board[row][col];
-    g->board[row][col] = 0;
+    g->board[row][col] = EMPTY_CELL;
     g->moves++;
     g->row = row;
     g->col = col;
@@ -65,15 +65,14 @@ Game new_game()
     for (char i = 0; i < BOARD_CELLS; i++)
     {
         char row = ROW(i), col = COL(i);
-        g.board[row][col] = i + 1;
+        g.board[row][col] = i;
     }
 
     g.row = g.col = MAXRC;
-    g.board[g.row][g.col] = 0;
     g.correct_cells = 15;
     g.moves = 0;
 
-    shuffle_board(&g);
+    //shuffle_board(&g);
     return g;
 }
 
