@@ -3,14 +3,28 @@
 #include <stdbool.h>
 #include "game.h"
 
-bool move_up(Game *gs)
+void move_to(Game *g, char row, char col)
 {
-    if (gs->row == 0)
+    char value = g->board[row][col];
+    if (value == TARGET_VALUE(row, col))
+    {
+        g->correct_cells--;
+    }
+    else if (value == TARGET_VALUE(g->row, g->col))
+    {
+        g->correct_cells++;
+    }
+    g->board[g->row][g->col] = g->board[row][col];
+    g->board[row][col] = 0;
+    g->moves++;
+}
+
+bool move_up(Game *g)
+{
+    if (g->row == 0)
         return false;
-    gs->board[gs->row][gs->col] = gs->board[gs->row - 1][gs->col];
-    gs->board[gs->row - 1][gs->col] = 0;
-    gs->moves++;
-    gs->row--;
+    move_to(g, g->row - 1, g->col);
+    g->row--;
     return true;
 }
 
@@ -18,9 +32,7 @@ bool move_down(Game *g)
 {
     if (g->row == MAXRC)
         return false;
-    g->board[g->row][g->col] = g->board[g->row + 1][g->col];
-    g->board[g->row + 1][g->col] = 0;
-    g->moves++;
+    move_to(g, g->row + 1, g->col);
     g->row++;
     return true;
 }
@@ -29,9 +41,8 @@ bool move_left(Game *g)
 {
     if (g->col == 0)
         return false;
-    g->board[g->row][g->col] = g->board[g->row][g->col - 1];
-    g->board[g->row][g->col - 1] = 0;
-    g->moves++;
+    move_to(g, g->row, g->col - 1);
+    char value = g->board[g->row][g->col - 1];
     g->col--;
     return true;
 }
@@ -40,9 +51,7 @@ bool move_right(Game *g)
 {
     if (g->col == MAXRC)
         return false;
-    g->board[g->row][g->col] = g->board[g->row][g->col + 1];
-    g->board[g->row][g->col + 1] = 0;
-    g->moves++;
+    move_to(g, g->row, g->col + 1);
     g->col++;
     return true;
 }
@@ -53,23 +62,24 @@ void shuffle_board(Game *g)
     srand((unsigned)time(&t));
     for (int i = 0; i < SHUFFLE_COUNT;)
     {
-        int d = RANDOM_DIRECTION;
+        int d = rand() % 4;
         switch (d)
         {
-        case UP:
-            move_up(g) && i++;
-            break;
-        case LEFT:
+        case 0:
             move_left(g) && i++;
             break;
-        case RIGHT:
+        case 1:
+            move_up(g) && i++;
+            break;
+        case 2:
             move_right(g) && i++;
             break;
-        case DOWN:
+        case 3:
             move_down(g) && i++;
             break;
         }
     }
+
     g->moves = 0; // clear after shuffle
 }
 
@@ -84,6 +94,8 @@ Game new_game()
 
     g.row = g.col = MAXRC;
     g.board[g.row][g.col] = 0;
+    g.correct_cells = 15;
+    g.moves = 0;
 
     shuffle_board(&g);
     return g;
@@ -91,14 +103,5 @@ Game new_game()
 
 bool check_win(Game *g)
 {
-    if (g->col != MAXRC && g->row != MAXRC)
-        return false;
-
-    for (char i = 0; i < BOARD_CELLS - 1; i++)
-    {
-        char row = ROW(i), col = COL(i);
-        if (g->board[row][col] != i + 1)
-            return false;
-    }
-    return true;
+    return g->correct_cells == BOARD_CELLS - 1;
 }
