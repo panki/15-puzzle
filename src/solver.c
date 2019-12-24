@@ -27,6 +27,32 @@ bool is_games_equal(Game *g1, Game *g2)
     return memcmp(g1->board, g2->board, BOARD_CELLS) == 0;
 }
 
+bool is_game_solvable(Game *g)
+{
+    // Algorithm from
+    // https://www.geeksforgeeks.org/check-instance-15-puzzle-solvable/
+
+    char emptyRow = g->row + 1; // first row should be odd
+    int parity = 0;
+
+    for (int i = 0; i < BOARD_CELLS; i++)
+    {
+        char ri = ROW(i), ci = COL(i), inotempty = g->board[ri][ci] != EMPTY_CELL;
+        if (inotempty)
+            for (int j = i + 1; j < BOARD_CELLS; j++)
+            {
+                char rj = ROW(j), cj = COL(j), jnotempty = g->board[rj][cj] != EMPTY_CELL;
+                if (jnotempty && g->board[ri][ci] > g->board[rj][cj])
+                    parity++;
+            }
+    }
+    return BOARD_SIZE % 2 == 0         // if even grid
+               ? emptyRow % 2 == 0     // and empty cell
+                     ? parity % 2 == 0 // on odd row
+                     : parity % 2 != 0 // on even row
+               : parity % 2 == 0;      // else odd grid
+}
+
 GameProbe *new_game_probe(Game *g, GameProbe *parent)
 {
     GameProbe *gp = malloc(sizeof(GameProbe));
@@ -39,6 +65,9 @@ GameProbe *new_game_probe(Game *g, GameProbe *parent)
 
 Solution *solver_solve(Game *g)
 {
+    if (!is_game_solvable(g))
+        return NULL;
+
     if (check_win(g))
         return NULL;
 
