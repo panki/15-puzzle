@@ -19,8 +19,8 @@ void init_screen()
     initscr();             // Инициализация библиотеки ncurses
     noecho();              // Не выводить на экран при нажатии клавиш
     curs_set(FALSE);       // Не показывать курсов
-    mvprintw(getmaxy(stdscr) - 2, (getmaxx(stdscr) - 21) / 2, "© 2019 Игра «Пятнашки»");
-    mvprintw(getmaxy(stdscr) - 1, (getmaxx(stdscr) - 50) / 2, "Куросвая работа Панько Д.А. <daniil.panko@mail.ru>");
+    mvprintw(getmaxy(stdscr) - 2, (getmaxx(stdscr) - 23) / 2, "© 2019 Game «15-puzzle»");
+    mvprintw(getmaxy(stdscr) - 1, (getmaxx(stdscr) - 39) / 2, "Authors: Panko Alexander & Panko Daniil");
     refresh();
 }
 
@@ -48,11 +48,11 @@ MENU_ITEM main_menu(MENU_ITEM default_item)
     char current_item = default_item >= 0 && default_item < MENU_ITEMS_COUNT ? default_item : 0;
 
     char *menu_items[MENU_ITEMS_COUNT];
-    menu_items[ITEM_PLAY] = "Новая игра";
-    menu_items[ITEM_HELP] = "Помощь    ";
-    menu_items[ITEM_EXIT] = "Выход     ";
+    menu_items[ITEM_PLAY] = "New game";
+    menu_items[ITEM_HELP] = "Help    ";
+    menu_items[ITEM_EXIT] = "Quit    ";
 
-    WINDOW *w = create_window(20, 7, "Меню");
+    WINDOW *w = create_window(20, 7, "Menu");
 
     while (true)
     {
@@ -95,7 +95,7 @@ Screen new_game_screen()
     char framew = cw * BOARD_SIZE + cw_space * (BOARD_SIZE + 1) + 2; // ширина рамки
     char frameh = ch * BOARD_SIZE + ch_space * (BOARD_SIZE + 1) + 2; // высота рамки
 
-    s.frame = create_window(framew, frameh, "Игра");
+    s.frame = create_window(framew, frameh, "Game");
 
     // Создаем дочерние окна для каждой клетки
     for (char i = 0; i < BOARD_CELLS; i++)
@@ -126,7 +126,7 @@ void update_game_screen(Screen *s, Game *g)
         }
         wrefresh(w);
     }
-    mvwprintw(s->frame, getmaxy(s->frame) - 1, (getmaxx(s->frame) - 16) / 2, " номер хода: %d ", g->moves);
+    mvwprintw(s->frame, getmaxy(s->frame) - 1, (getmaxx(s->frame) - 11) / 2, " Steps: %d ", g->moves);
     wrefresh(s->frame);
 }
 
@@ -146,15 +146,16 @@ void help()
     char width = 50;  // Ширина окна с рамкой
     char height = 13; // Высота окна с рамкой
 
-    WINDOW *frame = create_window(width, height, "Помощь");
+    WINDOW *frame = create_window(width, height, "Help");
     WINDOW *w = derwin(frame, height - 4, width - 8, 2, 4); // Новое окно с отступами для текста
 
-    wprintw(w, "Управление:\n\n");
-    wprintw(w, "← ↑ ↓ → - перемещение фишек\n");
-    wprintw(w, "      N - начать игру заново\n");
-    wprintw(w, "      S - подсказать следующий ход\n");
-    wprintw(w, "      Q - закончить игру и выйти в меню\n");
-    wprintw(w, "\n\nНажмите любую клавишу для возврата в меню");
+    wprintw(w, "Controls:\n\n");
+    wprintw(w, "← ↑ ↓ → - move\n");
+    wprintw(w, "      N - restart game\n");
+    wprintw(w, "      S - suggest next move\n");
+    wprintw(w, "      Q - quit\n");
+    wprintw(w, "\n\nPress any key to return");
+
     wrefresh(w);
 
     wgetch(frame); // Ждем нажатия на любую клавишу
@@ -165,8 +166,8 @@ void help()
 
 void win()
 {
-    WINDOW *w = create_window(50, 5, "Вы выиграли");
-    mvwprintw(w, 2, 4, "Нажмите любую клавишу для возврата в меню");
+    WINDOW *w = create_window(50, 5, "You win");
+    mvwprintw(w, 2, 4, "Press any key to return to the menu");
     wgetch(w);
     close_window(w);
 }
