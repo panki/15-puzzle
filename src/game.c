@@ -72,7 +72,7 @@ Game new_game()
     g.correct_cells = 15;
     g.moves = 0;
 
-    //shuffle_board(&g);
+    shuffle_board(&g);
     return g;
 }
 

@@ -11,7 +11,7 @@
 #define EMPTY_CELL (BOARD_CELLS - 1)
 #define TARGET_VALUE(row, col) ((row)*BOARD_SIZE + (col))
 
-#define SHUFFLE_COUNT 4
+#define SHUFFLE_COUNT 15
 
 typedef enum Direction
 {
