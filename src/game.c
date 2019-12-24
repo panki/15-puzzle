@@ -62,19 +62,19 @@ void shuffle_board(Game *g)
     srand((unsigned)time(&t));
     for (int i = 0; i < SHUFFLE_COUNT;)
     {
-        int d = rand() % 4;
+        int d = RANDOM_DIRECTION;
         switch (d)
         {
-        case 0:
-            move_left(g) && i++;
-            break;
-        case 1:
+        case UP:
             move_up(g) && i++;
             break;
-        case 2:
+        case LEFT:
+            move_left(g) && i++;
+            break;
+        case RIGHT:
             move_right(g) && i++;
             break;
-        case 3:
+        case DOWN:
             move_down(g) && i++;
             break;
         }
