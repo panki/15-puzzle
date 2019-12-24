@@ -31,11 +31,11 @@ bool move_to(Game *g, Direction dir)
     char value = g->board[row][col];
     if (value == TARGET_VALUE(row, col))
     {
-        g->correct_cells--;
+        g->wrong_cells++;
     }
     else if (value == TARGET_VALUE(g->row, g->col))
     {
-        g->correct_cells++;
+        g->wrong_cells--;
     }
     g->board[g->row][g->col] = g->board[row][col];
     g->board[row][col] = EMPTY_CELL;
@@ -69,7 +69,7 @@ Game new_game()
     }
 
     g.row = g.col = MAXRC;
-    g.correct_cells = 15;
+    g.wrong_cells = 0;
     g.moves = 0;
 
     shuffle_board(&g);
@@ -78,5 +78,5 @@ Game new_game()
 
 bool check_win(Game *g)
 {
-    return g->correct_cells == BOARD_CELLS - 1;
+    return g->wrong_cells == 0;
 }

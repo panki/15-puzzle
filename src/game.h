@@ -32,7 +32,7 @@ typedef struct Game
     char row;
     char col;
     unsigned int moves;
-    unsigned int correct_cells;
+    unsigned int wrong_cells;
 } Game;
 
 Game new_game();
