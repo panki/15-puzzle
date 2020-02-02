@@ -3,6 +3,23 @@
 #include "game.h"
 #include "ui.h"
 #include "solver.h"
+#include "history.h"
+
+int key2dir(int key)
+{
+    switch (key)
+    {
+    case KEY_UP:
+        return UP;
+    case KEY_DOWN:
+        return DOWN;
+    case KEY_RIGHT:
+        return RIGHT;
+    case KEY_LEFT:
+        return LEFT;
+    }
+    return -1;
+}
 
 int utf8len(char *s)
 {
@@ -153,6 +170,7 @@ void help()
     wprintw(w, "← ↑ ↓ → - move\n");
     wprintw(w, "      N - restart game\n");
     wprintw(w, "      S - suggest next move\n");
+    wprintw(w, "      U - undo last move\n");
     wprintw(w, "      Q - quit\n");
     wprintw(w, "\n\nPress any key to return");
 
@@ -175,9 +193,11 @@ void win()
 void play()
 {
     bool play = true;
+    Direction dir;
 
     Game game = new_game();
     Screen screen = new_game_screen();
+    History *history = history_new();
     Solution *solution;
 
     do
@@ -186,27 +206,33 @@ void play()
         int key = wgetch(screen.frame);
         switch (key)
         {
-        case KEY_RIGHT:
-            move_to(&game, LEFT);
-            break;
-        case KEY_DOWN:
-            move_to(&game, UP);
-            break;
-        case KEY_LEFT:
-            move_to(&game, RIGHT);
-            break;
         case KEY_UP:
-            move_to(&game, DOWN);
+        case KEY_DOWN:
+        case KEY_RIGHT:
+        case KEY_LEFT:
+            dir = OPPOSITE_DIRECTION(key2dir(key));
+            if (can_move_to(&game, dir))
+            {
+                history_push(history, &game);
+                move_to(&game, dir);
+            }
             break;
         case 'n':
         case 'N':
             game = new_game();
+            history_clear(history);
             break;
         case 's':
         case 'S':
             if (!solution)
                 solution = solver_solve(&game);
+            history_push(history, &game);
             game = solver_suggest(&game, &solution);
+            break;
+        case 'u':
+        case 'U':
+            if (history->size > 0)
+                game = history_pop(history);
             break;
         case 'q':
         case 'Q':
@@ -225,6 +251,7 @@ void play()
         }
     } while (play);
 
+    history_free(&history);
     solver_free(&solution);
     clear_game_screen(&screen);
 }

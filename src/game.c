@@ -3,8 +3,19 @@
 #include <stdbool.h>
 #include "game.h"
 
+bool can_move_to(Game *g, Direction dir)
+{
+    return (dir == UP && g->row > 0) ||
+           (dir == DOWN && g->row < MAXRC) ||
+           (dir == LEFT && g->col > 0) ||
+           (dir == RIGHT && g->col < MAXRC);
+}
+
 bool move_to(Game *g, Direction dir)
 {
+    if (!can_move_to(g, dir))
+        return false;
+
     char row = g->row, col = g->col;
 
     switch (dir)
@@ -24,9 +35,6 @@ bool move_to(Game *g, Direction dir)
     default:
         return false;
     }
-
-    if (col < 0 || col > MAXRC || row < 0 || row > MAXRC)
-        return false;
 
     char value = g->board[row][col];
     if (value == TARGET_VALUE(row, col))

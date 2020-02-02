@@ -38,5 +38,6 @@ typedef struct Game
 Game new_game();
 bool check_win(Game *);
 bool move_to(Game *, Direction);
+bool can_move_to(Game *, Direction);
 
 #endif
