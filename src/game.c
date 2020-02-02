@@ -47,11 +47,19 @@ bool move_to(Game *g, Direction dir)
 
 void shuffle_board(Game *g)
 {
+    // previous direction
+    int prev = -1;
+
     for (int i = 0; i < SHUFFLE_COUNT;)
     {
         int dir = RANDOM_DIRECTION;
-        move_to(g, dir) && i++;
+        if (dir != OPPOSITE_DIRECTION(prev) && move_to(g, dir))
+        {
+            prev = dir;
+            i++;
+        }
     }
+
     // clear after shuffle
     g->moves = 0;
 }
