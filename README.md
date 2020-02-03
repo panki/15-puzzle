@@ -4,6 +4,21 @@ The 15-puzzle (also called Gem Puzzle, Boss Puzzle, Game of Fifteen, Mystic Squa
 
 [wikipedia](https://en.wikipedia.org/wiki/15_puzzle)
 
+## Features
+
+- Nice UI (using ncurses)
+- Move suggestions (solve algorithm implemented)
+- Undo / Redo
+
+## Screenshots
+
+### Start
+![Start](/docs/start_screen.jpg?raw=true)
+### Help
+![Help](/docs/help_screen.jpg?raw=true)
+### Game
+![Game](/docs/game_screen.jpg?raw=true)
+
 
 ## Build
 ```bash
