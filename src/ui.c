@@ -170,7 +170,7 @@ void help()
     wprintw(w, "← ↑ ↓ → - move\n");
     wprintw(w, "      N - restart game\n");
     wprintw(w, "      S - suggest next move\n");
-    wprintw(w, "      U - undo last move\n");
+    wprintw(w, "    U/R - undo/redo last move\n");
     wprintw(w, "      Q - quit\n");
     wprintw(w, "\n\nPress any key to return");
 
