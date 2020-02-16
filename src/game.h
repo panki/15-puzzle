@@ -1,17 +1,19 @@
 #ifndef GAME_HEADER
 #define GAME_HEADER
 
-#include <stdbool.h>
+// Game settings
 
 #define BOARD_SIZE 4
+#define SHUFFLE_COUNT 15
+
+#include <stdbool.h>
+
 #define BOARD_CELLS BOARD_SIZE *BOARD_SIZE
 #define MAXRC (BOARD_SIZE - 1)
 #define ROW(i) (i / BOARD_SIZE)
 #define COL(i) (i % BOARD_SIZE)
 #define EMPTY_CELL (BOARD_CELLS - 1)
 #define TARGET_VALUE(row, col) ((row)*BOARD_SIZE + (col))
-
-#define SHUFFLE_COUNT 15
 
 typedef enum Direction
 {

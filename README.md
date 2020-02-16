@@ -9,32 +9,49 @@ The 15-puzzle (also called Gem Puzzle, Boss Puzzle, Game of Fifteen, Mystic Squa
 - Nice UI (using ncurses)
 - Move suggestions (solve algorithm implemented)
 - Undo / Redo
+- Supports any board size (needs to be recompiled)
 
 ## Screenshots
 
 ### Start
+
 ![Start](/docs/start_screen.jpg?raw=true)
+
 ### Help
+
 ![Help](/docs/help_screen.jpg?raw=true)
+
 ### Game
+
 ![Game](/docs/game_screen.jpg?raw=true)
 
-
 ## Build
+
 ```bash
 > make
 ```
 
 ## Run
+
 ```bash
 > ./build/15
 ```
 
+## Game settings
+
+Size of the board and initial shuffle complexity can be configured in <code>game.h</code>:
+
+```header
+#define BOARD_SIZE 4
+#define SHUFFLE_COUNT 15
+```
+
 ## Dependencies
 
-### ncurses 
-   
+### ncurses
+
 Mac OS
+
 ```bash
 brew install ncurses
 ```
