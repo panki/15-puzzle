@@ -1,7 +1,7 @@
 #ifndef PQ_HEADER
 #define PQ_HEADER
 
-#include <game.h>
+#include <stdbool.h>
 
 typedef struct queue
 {
