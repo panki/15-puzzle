@@ -197,8 +197,7 @@ void play()
 
     Game game = new_game();
     Screen screen = new_game_screen();
-    History *undo = history_new();
-    History *redo = history_new();
+    History *history = history_new();
     Solution *solution = NULL;
 
     do
@@ -214,40 +213,29 @@ void play()
             dir = OPPOSITE_DIRECTION(key2dir(key));
             if (can_move_to(&game, dir))
             {
-                history_push(undo, &game);
-                history_clear(redo);
+                history_add(history, &game);
                 move_to(&game, dir);
             }
             break;
         case 'n':
         case 'N':
             game = new_game();
-            history_clear(undo);
-            history_clear(redo);
+            history_clear(history);
             break;
         case 's':
         case 'S':
             if (!solution)
                 solution = solver_solve(&game);
-            history_push(undo, &game);
-            history_clear(redo);
+            history_add(history, &game);
             game = solver_suggest(&game, &solution);
             break;
         case 'u':
         case 'U':
-            if (undo->size > 0)
-            {
-                history_push(redo, &game);
-                game = history_pop(undo);
-            }
+            history_undo(history, &game);
             break;
         case 'r':
         case 'R':
-            if (redo->size > 0)
-            {
-                history_push(undo, &game);
-                game = history_pop(redo);
-            }
+            history_redo(history, &game);
             break;
         case 'q':
         case 'Q':
@@ -266,8 +254,7 @@ void play()
         }
     } while (play);
 
-    history_free(&undo);
-    history_free(&redo);
+    history_free(&history);
     solver_free(&solution);
     clear_game_screen(&screen);
 }
