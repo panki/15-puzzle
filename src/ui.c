@@ -10,13 +10,13 @@ int key2dir(int key)
     switch (key)
     {
     case KEY_UP:
-        return UP;
-    case KEY_DOWN:
         return DOWN;
+    case KEY_DOWN:
+        return UP;
     case KEY_RIGHT:
-        return RIGHT;
-    case KEY_LEFT:
         return LEFT;
+    case KEY_LEFT:
+        return RIGHT;
     }
     return -1;
 }
@@ -193,8 +193,6 @@ void win()
 void play()
 {
     bool play = true;
-    Direction dir;
-
     Game game = new_game();
     Screen screen = new_game_screen();
     History *history = history_new();
@@ -210,11 +208,10 @@ void play()
         case KEY_DOWN:
         case KEY_RIGHT:
         case KEY_LEFT:
-            dir = OPPOSITE_DIRECTION(key2dir(key));
-            if (can_move_to(&game, dir))
+            if (can_move_to(&game, key2dir(key)))
             {
                 history_add(history, &game);
-                move_to(&game, dir);
+                move_to(&game, key2dir(key));
             }
             break;
         case 'n':
